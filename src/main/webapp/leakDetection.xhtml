@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputStylesheet name="teconToolbarStyle.css" library="css"/>
+    <h:outputStylesheet name="objTreeStyle.css" library="css"/>
+    <h:outputStylesheet name="style.css" library="css"/>
+    <h:outputStylesheet name="/font-awesome/6.4.2/css/all.min-jsf.css" library="webjars"/>
+    <h:outputStylesheet name="/font-awesome/6.4.2/css/v4-shims.min-jsf.css" library="webjars"/>
+    <h:outputScript name="script.js" library="js" />
+    <h:outputScript name="inFrameCheck.js" library="js" />
+</h:head>
+<h:body style="height: 100%; margin: 0" >
+    <p:growl id="growl" showDetail="true" />
+
+    <h:form>
+        <p:remoteCommand autoRun="true" onstart="iframeStatus([{name:'inIframe', value:inIframe()}]);" />
+        <p:remoteCommand name="iframeStatus" action="#{leakDetectionMB.changeInIframe()}"/>
+    </h:form>
+
+    <h:form id="leakDetectionForm" style="height: 100%; display: flex; flex-direction: column; position: fixed">
+
+        <div id="toolbar">
+
+            <div id="formName" style="justify-content: space-around">
+                <h:outputText value="ВЫЯВЛЕНИЕ УТЕЧЕК"/>
+            </div>
+
+            <div id="toolbarTable" >
+                <div style="min-width: 310px;" class="customTD">
+                    <div class="contentField">
+                        <h:panelGroup style="width: 100%; height: 100%" layout="block" id="period">
+                            <div style="display: flex; flex-direction: row">
+                                <div style="width: 100px; margin-left: 4px; margin-top: 2px">
+                                    <p:outputLabel value="Период" style="background-color: white; height: 29px;
+                                  border-radius: .2rem; border: 1px solid #6b7281; display: flex; align-items: center;
+                                  padding: 5px; font-size: .9rem; font-weight: 400; justify-content: start;
+                                  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue,
+                                  Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji "/>
+                                </div>
+                                <div style="height: 32px; width: 203px;">
+                                    <p:datePicker id="month" view="month" value="#{leakDetectionMB.date}" pattern="MM/yyyy" yearNavigator="true"
+                                                  yearRange="2000:2050" style="height: 32px; padding: 0; width: 203px; "
+                                                  rendered="#{leakDetectionMB.timePeriod eq 'm' ? true : false}">
+                                        <p:ajax process="@this" event="valueChange" onstart="PF('statusDialog').show();"
+                                                onsuccess="PF('statusDialog').hide();"
+                                                listener="#{leakDetectionMB.periodChangeMonth()}"/>
+                                    </p:datePicker>
+
+                                    <h:selectOneMenu value="#{leakDetectionMB.strDate}" rendered="#{leakDetectionMB.timePeriod eq 'y' ? true : false}"
+                                                     style="height: 29px; padding: 0; width: 203px; margin-top: 2px; border-radius: .2rem;
+                                                     border: 1px solid #6b7281; color: #495057; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto , Helvetica Neue,  Arial, Noto Sans, sans-serif,
+                                 Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji; font-size: .9rem;">
+                                        <p:ajax event="valueChange"  onstart="PF('statusDialog').show();"
+                                                onsuccess="PF('statusDialog').hide();"
+                                                listener="#{leakDetectionMB.periodChangeYear()}"/>
+                                        <f:selectItems value="#{leakDetectionMB.yearsList}" var="yearsList"
+                                                       itemLabel="#{yearsList}" itemValue="#{yearsList}"/>
+                                    </h:selectOneMenu>
+
+                                </div>
+
+                            </div>
+
+                            <div style="display: flex; flex-direction: row">
+                                <div style="width: 100px; margin-left: 4px; margin-top: 2px">
+                                    <p:outputLabel value="Интервал" style="background-color: white; height: 29px;
+                                  border-radius: .2rem; border: 1px solid #6b7281; display: flex; align-items: center;
+                                  padding: 5px; font-size: .9rem; font-weight: 400; justify-content: start;
+                                  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue,
+                                  Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji "/>
+                                </div>
+                                <div style="height: 32px; width: 203px;">
+                                    <h:selectOneMenu style="width:100%; height: 1.8rem; margin-top: 2px; text-align: start; font-size: 1rem; text-overflow: ellipsis; border-radius: .2rem;
+                                 color: #495057; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto , Helvetica Neue,  Arial, Noto Sans, sans-serif,
+                                 Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji" value="#{leakDetectionMB.timePeriod}">
+                                        <f:selectItem itemLabel="Месяц" itemValue="m"/>
+                                        <f:selectItem itemLabel="Год" itemValue="y"/>
+                                        <p:ajax event="valueChange" onstart="PF('statusDialog').show();"
+                                                onsuccess="PF('statusDialog').hide();"
+                                                listener="#{leakDetectionMB.intervalChange()}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+
+
+                        </h:panelGroup>
+                    </div>
+                    <div class="botField">
+                        <div class="botTextField">
+                            <h:outputText value="Календарь" styleClass="toolbarBottomText"/>
+                        </div>
+                        <div>
+                            <i class="fa fa-calendar customIcon"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customTD" style="width: inherit;">
+                    <div class="contentField" style="padding-bottom: 10px; padding-left: 2px; padding-right: 2px;">
+                        <div style="width: 100%; height: 100%">
+                            <p:selectOneListbox id="basic" value="#{leakDetectionMB.alg}" style="height: 100%; padding: 0;">
+                                <f:selectItem itemLabel="Определение утечки ГВС" itemValue="gvs"/>
+                                <f:selectItem itemLabel="Определение утечки теплоносителя" itemValue="coolant"/>
+
+                                <p:ajax event="valueChange" listener="#{leakDetectionMB.algChange()}" onstart="PF('statusDialog').show();"
+                                        onsuccess="PF('statusDialog').hide();" />
+                            </p:selectOneListbox>
+                        </div>
+                    </div>
+                    <div class="botField">
+                        <div class="botTextField">
+                            <h:outputText value="Установки и параметры" styleClass="toolbarBottomText"/>
+                        </div>
+                        <div>
+                            <i class="fa fa-sliders fa-rotate-90 customIcon"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customTD customCursor" style="min-width: 60px;" onclick="PF('archiveTable').show();">
+                    <div class="contentField">
+                        <h:outputText value="Пуск" styleClass="customToolbarButtonText"/>
+                        <ui:insert name="start"/>
+                    </div>
+                    <div class="botField">
+                        <div>
+                            <i class="fa fa-power-off customIcon"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="standardTD" style="min-width: 60px;">
+                    <div class="contentField">
+                        <h:outputText value="Переход" styleClass="customToolbarButtonText"/>
+                        <ui:insert name="transition"/>
+                    </div>
+                    <div class="botField">
+                        <div>
+                            <i class="fa fa-sitemap fa-rotate-270 customIcon"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="standardTD" style="min-width: 60px;" >
+                    <div class="contentField">
+                        <h:outputText value="График" styleClass="customToolbarButtonText"/>
+                        <ui:insert name="graph"/>
+                    </div>
+                    <div class="botField">
+                        <div>
+                            <i class="fa fa-bar-chart customIcon"/>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGroup class="customTD customCursor" style="min-width: 60px;" id="report" layout="block">
+
+                    <div class="contentField">
+                        <h:outputText value="Отчет" styleClass="customToolbarButtonText"/>
+
+                    </div>
+                    <div class="botField">
+
+                        <div>
+                            <i class="fa fa-clone customIcon"/>
+                        </div>
+                    </div>
+                    <p:ajax event="click" listener="#{leakDetectionMB.createReport()}" process="@this" />
+
+                </h:panelGroup>
+
+
+            </div>
+        </div>
+
+        <div  style="height: calc(100% - 93px); margin-top: 5px;">
+            <div style="height: 100%; display: flex; flex-direction: row;">
+                <div style="width: 17.8%; min-width: 21rem; display: flex; flex-direction: column">
+                    <div style="width: 5rem; background-color: #d9d9d9; height: 1.8rem; border-radius: .25rem .25rem 0 0;">
+                        <i class="fa fa-sitemap customTreeIcon" style="margin-left: 2rem; margin-top: 0.8rem;"/>
+                    </div>
+
+                    <table style="padding: .25rem; background-color: #d9d9d9;">
+                        <tr>
+                            <td style="width: 6.4rem;">
+                                <div style="width: 100%;  height: 32px">
+                                    <p:outputLabel value="Тип объектов" style="background-color: rgba(118, 121, 129, .61); height: 32px;
+                                  border-radius: .2rem; border: 1px solid #6b7281; display: flex; align-items: center;
+                                  padding: 5px; font-size: .875rem; font-weight: 400;
+                                  font-family: Helvetica;"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <h:selectOneMenu style="width:100%; height: 2rem; text-align: center; font-size: 1rem; text-overflow: ellipsis; border-radius: .2rem;
+                                 color: #495057; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto , Helvetica Neue,  Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji">
+                                        <f:selectItem itemLabel="Центральный тепловой пункт" itemValue="Центральный тепловой пункт"/>
+
+                                    </h:selectOneMenu>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <p:tree value="#{leakDetectionMB.root}" widgetVar="treeTable" var="structTree" id="treeTableId"
+                            selectionMode="single" selection="#{leakDetectionMB.selectedStructNode}"
+                            style="height: 100%; overflow: auto; background-color: #d9d9d9;" class="tc-custom-scroll">
+
+                        <p:ajax event="select"
+                                listener="#{leakDetectionMB.selectNode}" onstart="PF('statusDialog').show();"
+                                onsuccess="PF('statusDialog').hide();"/>
+
+                        <p:treeNode>
+                            <i class="#{structTree.myIcon}" id="icon"
+                               style="vertical-align: middle; margin: 0 .5rem 0 0; "/>
+                            <h:outputText value="#{structTree.name}" style="padding: .286em;"/>
+                        </p:treeNode>
+
+                    </p:tree>
+
+                    <h:panelGroup id="empty" rendered="#{leakDetectionMB.structTreeListIsEmpty}" layout="block" style="background-color: #d9d9d9;
+               display: flex; justify-content: center;">
+                        <h:outputText  value="Объекты не найдены..." style="display: flex; width: 19.7rem; background-color: #cce5ff;
+                  padding: .75rem 1.25rem; margin: .5rem .5rem 0; color: #004085; border-color: #b8daff; border-radius: .25rem; font-size: .92rem;"/>
+                    </h:panelGroup>
+
+                    <table style="padding: .25rem; background-color: #d9d9d9; width: 100%">
+                        <tr>
+                            <td style="width: 8.3rem; min-width: 8.3rem;">
+                                <div style="width: 100%;  height: 32px">
+                                    <p:outputLabel value="Свойство объекта" style="background-color: rgba(118, 121, 129, .61); height: 32px;
+                                     border-radius: .2rem; border: 1px solid #6b7281; display: flex; align-items: center;
+                                     padding: 5px; font-size: .875rem; font-weight: 400;
+                                     font-family: Helvetica;"/>
+                                </div>
+                            </td>
+                            <td>
+
+                                <div>
+                                    <h:selectOneMenu value="#{leakDetectionMB.selectedProp}"
+                                                     style="width:100%; height: 2rem; max-width: 12rem; text-align: left; font-size: 0.875rem; text-overflow: ellipsis; border-radius: .2rem;
+                                        color: #495057; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto , Helvetica Neue,  Arial, Noto Sans,
+                                        sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji; border-color: black;">
+                                        <f:ajax event="valueChange"
+                                                listener="#{leakDetectionMB.selectProp}"/>
+                                        <f:converter converterId="paramConverter"/>
+                                        <f:selectItems value="#{leakDetectionMB.propList}" var="objType"
+                                                       itemLabel="#{objType.propName}" itemValue="#{objType}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h:panelGroup style=" background-color: #d9d9d9; width: 100%" layout="block">
+                        <p:inputText value="#{leakDetectionMB.filterWord}" style="height: 2rem; width: 96%; margin-left: 5px;
+                         margin-bottom: 10px; border-color: black;" placeholder="Введите значение свойства для фильтрации"/>
+                        <p:ajax event="keyup" listener="#{leakDetectionMB.filtering()}" global="false" process="@this" delay="600" onstart="PF('navigateAllBui').show();" oncomplete="PF('navigateAllBui').hide();"/>
+                    </h:panelGroup>
+                </div>
+
+                <p:blockUI block="treeTableId" widgetVar="navigateAllBui"/>
+
+                <div style="height: 100%; display: flex; flex-direction: column; ">
+
+                    <div style="display: flex; flex-direction: row; width: 100%; height: 88px; background-color: #f8f9fa">
+                        <div style="display: flex; flex-direction: column; width: 40%; text-align: end">
+                            <p:outputLabel value="Нормативные величины (константы):"/>
+                            <p:outputLabel value="Ускорение устранения, n:"/>
+                            <p:outputLabel value="Температура холодной воды, Тхв:"/>
+                        </div>
+                        <p:dataTable id="leftSide" var="leftSide" widgetVar="leftSide" value="#{leakDetectionMB.leftSide}"
+                                     showGridlines="true" styleClass="noHeader"
+                                     rowKey="#{leftSide.id}" style="width: 5%; margin-top: 21px; margin-left: 1px; margin-right: 1px;" >
+
+                            <p:column style="text-align: center" styleClass="#{leftSide.getCustomColor() eq '1' ? 'customCellStyle' : ''}">
+                                <h:outputText style="display: block;" value="#{leftSide.value}"/>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <div style="display: flex; flex-direction: column; width: 5%">
+                            <br/>
+                            <p:outputLabel value="сутки"/>
+                            <p:outputLabel value="℃"/>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; width: 19% ; text-align: end">
+                            <p:outputLabel value="Тариф на теплоноситель, Wтн:"/>
+                            <p:outputLabel value="Тариф на покупную тепловую энергию, Wтэ:"/>
+                            <p:outputLabel value="Тариф на холодную воду, Wхв:"/>
+                        </div>
+                        <p:dataTable id="rightSide" var="rightSide" widgetVar="rightSide" value="#{leakDetectionMB.rightSide}"
+                                     showGridlines="true" styleClass="noHeader"
+                                     rowKey="#{rightSide.id}" style="width: 5%; margin-left: 1px; margin-right: 1px;" >
+
+                            <p:column style="text-align: center" styleClass="#{rightSide.getCustomColor() eq '1' ? 'customCellStyle' : ''}">
+                                <h:outputText style="display: block;" value="#{rightSide.value}"/>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <div style="display: flex; flex-direction: column; width: 26%">
+                            <p:outputLabel value="руб/куб.м."/>
+                            <p:outputLabel value="руб/Гкал"/>
+                            <p:outputLabel value="руб/куб.м."/>
+                        </div>
+                    </div>
+
+                    <div style="overflow: auto; height: 100%; margin-left: .5rem; width: calc(100% - .5rem)">
+                        <h:panelGroup style="height: 27px; width: 100%; text-align: start;" id="struct">
+                            <h:outputText value="#{leakDetectionMB.struct}" style="line-height: 27px;"/>
+                        </h:panelGroup>
+                        <h:panelGroup style="height: calc(100% - 54px); overflow: auto;" id="tableField" layout="block">
+                            <p:dataTable id="coolantTablel" var="coolantData" widgetVar="coolantTable1" value="#{leakDetectionMB.coolantTableList}"
+                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;"
+                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'coolant'}" paginator="true" rows="300"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         rowsPerPageTemplate="150,300,750">
+
+                                <p:column style="text-align: center; width: 79px" headerText="Филиал" styleClass="#{coolantData.color}" >
+                                    <h:outputText value="#{coolantData.filial}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 95px" headerText="Предприятие" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.pred}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 105px" headerText="ЦТП" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.chp}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 64px" headerText="Тип алгоритма" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.algoritm}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Дата" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.date}" />
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Тхв, ℃" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.thv}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 4%" headerText="Т3, ℃" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.t3}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Т4, ℃" styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.t4}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G1,   м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.g1}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G2,   м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.g2}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G3,   м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.g3}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G4, м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.g4}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Gп, м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.gp}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Gср, м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.gsr}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="ΔG, м3⁄сут." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.dg}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Эффект по теплоносителю, тыс.руб." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.coolant_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Эффект по теплу, тыс.руб." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.heat_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Суммарный эффект, тыс.руб." styleClass="#{coolantData.color}">
+                                    <h:outputText value="#{coolantData.sum_eff}"/>
+                                </p:column>
+
+                            </p:dataTable>
+
+                            <p:dataTable id="gvsTablel" var="gvsData" widgetVar="gvsTable1" value="#{leakDetectionMB.gvsTableList}"
+                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;"
+                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'gvs'}" paginator="true" rows="300"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         rowsPerPageTemplate="150,300,750">
+
+                                <p:column style="text-align: center; width: 79px" headerText="Филиал" styleClass="#{gvsData.color}" >
+                                    <h:outputText value="#{gvsData.filial}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 95px" headerText="Предприятие" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.pred}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 105px" headerText="ЦТП" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.chp}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 64px" headerText="Тип алгоритма" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.algoritm}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Дата" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.date}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Тхв, ℃" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.thv}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Т7, ℃" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.t7}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Gхвнагвф, м3⁄сут" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.ghvnagvsf}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G7ф, м3⁄сут" styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.g7f}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="G13ф, м3⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.g13f}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Qф, Гкал⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.qf}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="ΔGф, м3⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.dgf}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="ΔGср, м3⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.dgavg}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="Qср, Гкал⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.qavg}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="ΔG, м3⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.dg}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 5%" headerText="ΔQ, Гкал⁄сут." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.dq}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Эффект по теплу, тыс.руб." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.heat_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Эффект по воде, тыс.руб." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.water_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px" headerText="Суммарный эффект, тыс.руб." styleClass="#{gvsData.color}">
+                                    <h:outputText value="#{gvsData.sum_eff}"/>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </h:panelGroup>
+                        <div style="height: 27px; width: 100%; text-align: start;">
+
+                            <p:dataTable id="coolantTotalTablel" var="coolantTotalData" widgetVar="coolantTotalTable1" value="#{leakDetectionMB.total}"
+                                         style="table-layout: fixed; width: 100%;">
+                                <p:column style="text-align: start; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                    <h:outputText value="#{coolantTotalData.filial}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                    <h:outputText value="#{coolantTotalData.coolant_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                    <h:outputText value="#{coolantTotalData.heat_eff}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 137px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                    <h:outputText value="#{coolantTotalData.sum_eff}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:form>
+
+    <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" draggable="false" closable="false"
+              resizable="false" style="box-shadow: none;" position="center center" onShow="PF('statusDialog').initPosition();">
+        <i class="pi pi-spinner pi-spin" style="font-size: 5rem;" />
+    </p:dialog>
+
+    <p:dialog id="archiveTable" header="Архивные отчеты" widgetVar="archiveTable" modal="true"
+              resizable="false" showEffect="fade" hideEffect="fade" width="500" height="500">
+
+        <p:dataTable id="archiveReportTable" var="archiveReportTable" widgetVar="archiveReportTable" value="#{leakDetectionMB.reportList}"
+                     style="overflow-wrap: break-word; border-color: black; table-layout: fixed;">
+            <p:column style="height: 25px" headerText="Тип алгоритма">
+                <h:outputText value="#{archiveReportTable.repType}"/>
+            </p:column>
+            <p:column width="100" style="text-align: center; height: 25px" headerText="Дата">
+                <h:outputText value="#{archiveReportTable.repDate}"/>
+            </p:column>
+            <p:column width="50">
+                <div onclick="window.open('#{archiveReportTable.redirect}')" style="display: flex; width: 25px; height: 25px;
+                         justify-content: center; margin-left: 10px; align-items: center;" class="customSave">
+                    <i class="fa fa-save"/>
+                </div>
+            </p:column>
+        </p:dataTable>
+
+    </p:dialog>
+
+</h:body>
+</html>
