@@ -54,3 +54,7 @@ body .ui-datatable thead th {
     height: 400px;
     width: 400px;
 }
+
+.ui-datatable-footer {
+    padding: 0 !important;
+}

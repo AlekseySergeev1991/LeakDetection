@@ -152,7 +152,7 @@ body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-togg
     display: none;
 }
 
-/*Стили выделения элементов дерева в закладке "Линкованные объекты / (Вычислимые параметры, Параметры)"*/
+/*Стили выделения элементов дерева*/
 
 body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight).ui-state-hover {
     background: #eaeaea;

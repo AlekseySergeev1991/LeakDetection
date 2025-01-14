@@ -45,7 +45,7 @@
                                 </div>
                                 <div style="height: 32px; width: 203px;">
                                     <p:datePicker id="month" view="month" value="#{leakDetectionMB.date}" pattern="MM/yyyy" yearNavigator="true"
-                                                  yearRange="2000:2050" style="height: 32px; padding: 0; width: 203px; "
+                                                  yearRange="2000:2050" style="height: 32px; padding: 0; width: 203px; " locale="ru"
                                                   rendered="#{leakDetectionMB.timePeriod eq 'm' ? true : false}">
                                         <p:ajax process="@this" event="valueChange" onstart="PF('statusDialog').show();"
                                                 onsuccess="PF('statusDialog').hide();"
@@ -171,7 +171,7 @@
                             <i class="fa fa-clone customIcon"/>
                         </div>
                     </div>
-                    <p:ajax event="click" listener="#{leakDetectionMB.createReport()}" process="@this" />
+                    <p:ajax event="click" listener="#{leakDetectionMB.createReport()}" process="@this"/>
 
                 </h:panelGroup>
 
@@ -318,12 +318,20 @@
                         <h:panelGroup style="height: 27px; width: 100%; text-align: start;" id="struct">
                             <h:outputText value="#{leakDetectionMB.struct}" style="line-height: 27px;"/>
                         </h:panelGroup>
-                        <h:panelGroup style="height: calc(100% - 54px); overflow: auto;" id="tableField" layout="block">
+
+                        <h:panelGroup style="height: calc(100% - 27px); overflow: auto;" id="tableField" layout="block" >
+
+                            <h:outputText value="Выберите объект для отображения архива значений" rendered="#{leakDetectionMB.noObjSelected}"
+                            style="display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: red; height: 85%;
+                            text-transform: uppercase; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;"/>
+
                             <p:dataTable id="coolantTablel" var="coolantData" widgetVar="coolantTable1" value="#{leakDetectionMB.coolantTableList}"
-                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;"
-                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'coolant'}" paginator="true" rows="300"
-                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                         rowsPerPageTemplate="150,300,750">
+                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;" scrollHeight="100%"
+                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'coolant' and !leakDetectionMB.noObjSelected}" paginator="true" rows="300"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} из {totalRecords}"
+                                         rowsPerPageTemplate="150,300,750" paginatorPosition="bottom"
+                                         stickyHeader="true" stickyTopAt="#struct">
 
                                 <p:column style="text-align: center; width: 79px" headerText="Филиал" styleClass="#{coolantData.color}" >
                                     <h:outputText value="#{coolantData.filial}"/>
@@ -349,25 +357,25 @@
                                 <p:column style="text-align: center; width: 5%" headerText="Т4, ℃" styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.t4}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G1,   м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V1,   м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.g1}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G2,   м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V2,   м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.g2}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G3,   м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V3,   м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.g3}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G4, м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V4, м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.g4}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="Gп, м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="Vп, м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.gp}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="Gср, м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="Vср, м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.gsr}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="ΔG, м3⁄сут." styleClass="#{coolantData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="ΔV, м3⁄сут." styleClass="#{coolantData.color}">
                                     <h:outputText value="#{coolantData.dg}"/>
                                 </p:column>
                                 <p:column style="text-align: center; width: 120px" headerText="Эффект по теплоносителю, тыс.руб." styleClass="#{coolantData.color}">
@@ -380,13 +388,32 @@
                                     <h:outputText value="#{coolantData.sum_eff}"/>
                                 </p:column>
 
+                                <f:facet name="footer">
+                                    <p:dataTable id="coolantTotalTablel1" var="coolantTotalData" widgetVar="coolantTotalTable1" value="#{leakDetectionMB.total}"
+                                                 style="table-layout: fixed; width: 100%;" >
+                                        <p:column style="text-align: start; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.filial}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.coolant_eff}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.heat_eff}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 137px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.sum_eff}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </f:facet>
+
                             </p:dataTable>
 
                             <p:dataTable id="gvsTablel" var="gvsData" widgetVar="gvsTable1" value="#{leakDetectionMB.gvsTableList}"
-                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;"
-                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'gvs'}" paginator="true" rows="300"
-                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                         rowsPerPageTemplate="150,300,750">
+                                         showGridlines="true" scrollable="true" style="overflow-wrap: break-word; font-size: .75rem; border-color: black; table-layout: fixed;" scrollHeight="100%"
+                                         rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'gvs' and !leakDetectionMB.noObjSelected}" paginator="true" rows="300"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} из {totalRecords}"
+                                         rowsPerPageTemplate="150,300,750" paginatorPosition="bottom" >
 
                                 <p:column style="text-align: center; width: 79px" headerText="Филиал" styleClass="#{gvsData.color}" >
                                     <h:outputText value="#{gvsData.filial}"/>
@@ -409,28 +436,28 @@
                                 <p:column style="text-align: center; width: 5%" headerText="Т7, ℃" styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.t7}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="Gхвнагвф, м3⁄сут" styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="Vхвнагвф, м3⁄сут" styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.ghvnagvsf}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G7ф, м3⁄сут" styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V7ф, м3⁄сут" styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.g7f}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="G13ф, м3⁄сут." styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="V13ф, м3⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.g13f}"/>
                                 </p:column>
                                 <p:column style="text-align: center; width: 5%" headerText="Qф, Гкал⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.qf}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="ΔGф, м3⁄сут." styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="ΔVф, м3⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.dgf}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="ΔGср, м3⁄сут." styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="ΔVср, м3⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.dgavg}"/>
                                 </p:column>
                                 <p:column style="text-align: center; width: 5%" headerText="Qср, Гкал⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.qavg}"/>
                                 </p:column>
-                                <p:column style="text-align: center; width: 5%" headerText="ΔG, м3⁄сут." styleClass="#{gvsData.color}">
+                                <p:column style="text-align: center; width: 5%" headerText="ΔV, м3⁄сут." styleClass="#{gvsData.color}">
                                     <h:outputText value="#{gvsData.dg}"/>
                                 </p:column>
                                 <p:column style="text-align: center; width: 5%" headerText="ΔQ, Гкал⁄сут." styleClass="#{gvsData.color}">
@@ -446,27 +473,27 @@
                                     <h:outputText value="#{gvsData.sum_eff}"/>
                                 </p:column>
 
+                                <f:facet name="footer">
+                                    <p:dataTable id="coolantTotalTablel2" var="coolantTotalData" widgetVar="coolantTotalTable1" value="#{leakDetectionMB.total}"
+                                                 style="table-layout: fixed; width: 100%;" >
+                                        <p:column style="text-align: start; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.filial}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.coolant_eff}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.heat_eff}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 137px; border-width: 1px; background-color: green; border-color: black; color: black;" >
+                                            <h:outputText value="#{coolantTotalData.sum_eff}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </f:facet>
+
                             </p:dataTable>
 
                         </h:panelGroup>
-                        <div style="height: 27px; width: 100%; text-align: start;">
-
-                            <p:dataTable id="coolantTotalTablel" var="coolantTotalData" widgetVar="coolantTotalTable1" value="#{leakDetectionMB.total}"
-                                         style="table-layout: fixed; width: 100%;">
-                                <p:column style="text-align: start; border-width: 1px; background-color: green; border-color: black; color: black;" >
-                                    <h:outputText value="#{coolantTotalData.filial}"/>
-                                </p:column>
-                                <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
-                                    <h:outputText value="#{coolantTotalData.coolant_eff}"/>
-                                </p:column>
-                                <p:column style="text-align: center; width: 120px; border-width: 1px; background-color: green; border-color: black; color: black;" >
-                                    <h:outputText value="#{coolantTotalData.heat_eff}"/>
-                                </p:column>
-                                <p:column style="text-align: center; width: 137px; border-width: 1px; background-color: green; border-color: black; color: black;" >
-                                    <h:outputText value="#{coolantTotalData.sum_eff}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </div>
                     </div>
                 </div>
             </div>

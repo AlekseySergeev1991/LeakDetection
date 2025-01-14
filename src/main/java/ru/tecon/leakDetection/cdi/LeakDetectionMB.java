@@ -1,5 +1,11 @@
 package ru.tecon.leakDetection.cdi;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -7,12 +13,6 @@ import ru.tecon.leakDetection.ejb.CheckUserSB;
 import ru.tecon.leakDetection.ejb.LeakDetectionSB;
 import ru.tecon.leakDetection.model.*;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,6 +58,7 @@ public class LeakDetectionMB implements Serializable {
     private boolean structTreeListIsEmpty;
     private boolean inIframe;
     private boolean disableGraphTotalRedirect = false;
+    private boolean noObjSelected = true;
 
 
     private static final Logger logger = Logger.getLogger(LeakDetectionMB.class.getName());
@@ -79,8 +80,7 @@ public class LeakDetectionMB implements Serializable {
         loadProperty();
         periodChangeMonth();
         yearsList = createYearList();
-        loadConstData(selectedStructNode.getData().getMyId());
-        loadStruct(user, selectedStructNode.getData().getMyId());
+        loadConstData(545);
         reportList = leakDetectionSB.getArchiveTable();
     }
 
@@ -125,11 +125,6 @@ public class LeakDetectionMB implements Serializable {
         coolantTableList = leakDetectionSB.getCoolantTable(id, date,timePeriod, user);
         total = coolantTableList.get(coolantTableList.size()-1);
         coolantTableList.remove(coolantTableList.size()-1);
-        PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
-        PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
-        PrimeFaces.current().ajax().update("leakDetectionForm:struct");
-        PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
-        PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
     }
 
     /**
@@ -141,11 +136,6 @@ public class LeakDetectionMB implements Serializable {
                 gvsTableList.get(gvsTableList.size()-1).getWater_eff(), gvsTableList.get(gvsTableList.size()-1).getSum_eff(),
                 gvsTableList.get(gvsTableList.size()-1).getColor());
         gvsTableList.remove(gvsTableList.size()-1);
-        PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
-        PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
-        PrimeFaces.current().ajax().update("leakDetectionForm:struct");
-        PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
-        PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
     }
 
     /**
@@ -193,30 +183,41 @@ public class LeakDetectionMB implements Serializable {
         DateFormat df = new SimpleDateFormat("yyyy-MM");
         strDate = df.format(date);
         strDate = strDate + "-01 00:00";
-        if (selectedStructNode == null) {
-            selectedStructNode = new DefaultTreeNode<>(structTreeList.get(0), null);
+        if (!noObjSelected) {
+            if (alg.equals("coolant")) {
+                loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            } else {
+                loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            }
+            loadStruct(user, selectedStructNode.getData().getMyId());
+
         }
-        if (alg.equals("coolant")) {
-            loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        } else {
-            loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        }
-        loadStruct(user, selectedStructNode.getData().getMyId());
+        PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:struct");
+        PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
+        PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
     }
 
     /**
      * Метод для действий после выбора даты для интервала год
      */
     public void periodChangeYear() {
-        if (selectedStructNode == null) {
-            selectedStructNode = new DefaultTreeNode<>(structTreeList.get(0), null);
+        if (!noObjSelected) {
+            if (alg.equals("coolant")) {
+                loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            } else {
+                loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            }
+            loadStruct(user, selectedStructNode.getData().getMyId());
         }
-        if (alg.equals("coolant")) {
-            loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        } else {
-            loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        }
-        loadStruct(user, selectedStructNode.getData().getMyId());
+
+
+        PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:struct");
+        PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
+        PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
     }
 
     /**
@@ -231,15 +232,15 @@ public class LeakDetectionMB implements Serializable {
             DateFormat df = new SimpleDateFormat("yyyy-MM");
             strDate = df.format(date);
         }
-        if (selectedStructNode == null) {
-            selectedStructNode = new DefaultTreeNode<>(structTreeList.get(0), null);
+        if (!noObjSelected) {
+            if (alg.equals("coolant")) {
+                loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            } else {
+                loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            }
+            loadStruct(user, selectedStructNode.getData().getMyId());
         }
-        if (alg.equals("coolant")) {
-            loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        } else {
-            loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        }
-        loadStruct(user, selectedStructNode.getData().getMyId());
+
         PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
         PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
         PrimeFaces.current().ajax().update("leakDetectionForm:struct");
@@ -254,6 +255,7 @@ public class LeakDetectionMB implements Serializable {
     public void selectNode() {
         leftSide.clear();
         rightSide.clear();
+        noObjSelected = false;
         loadConstData(selectedStructNode.getData().getMyId());
         if (alg.equals("coolant")) {
             loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
@@ -262,11 +264,13 @@ public class LeakDetectionMB implements Serializable {
         }
         disableGraphTotalRedirect = selectedStructNode.getData().getMyType().equals("S145") || selectedStructNode.getData().getMyType().equals("O1");
         loadStruct(user, selectedStructNode.getData().getMyId());
+
         PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
         PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
         PrimeFaces.current().ajax().update("leakDetectionForm:struct");
         PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
         PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
+        PrimeFaces.current().ajax().update("leakDetectionForm:noObjSelected");
     }
 
     /**
@@ -298,15 +302,23 @@ public class LeakDetectionMB implements Serializable {
             DateFormat df = new SimpleDateFormat("yyyy-MM");
             strDate = df.format(date);
         }
-        if (selectedStructNode == null) {
-            selectedStructNode = new DefaultTreeNode<>(structTreeList.get(0), null);
+        if (!noObjSelected) {
+            if (alg.equals("coolant")) {
+                loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            } else {
+                loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
+            }
+            loadStruct(user, selectedStructNode.getData().getMyId());
+
         }
-        if (alg.equals("coolant")) {
-            loadCoolantTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        } else {
-            loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
-        }
-        loadStruct(user, selectedStructNode.getData().getMyId());
+
+        PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
+        PrimeFaces.current().ajax().update("leakDetectionForm:struct");
+        PrimeFaces.current().ajax().update("leakDetectionForm:tableField");
+        PrimeFaces.current().ajax().update("leakDetectionForm:coolantTotalTablel");
+        PrimeFaces.current().ajax().update("leakDetectionForm:period");
+
     }
 
     public String createDateForRedirect (String strDate) {
@@ -549,5 +561,13 @@ public class LeakDetectionMB implements Serializable {
 
     public void setDisableGraphTotalRedirect(boolean disableGraphTotalRedirect) {
         this.disableGraphTotalRedirect = disableGraphTotalRedirect;
+    }
+
+    public boolean isNoObjSelected() {
+        return noObjSelected;
+    }
+
+    public void setNoObjSelected(boolean noObjSelected) {
+        this.noObjSelected = noObjSelected;
     }
 }

@@ -1,12 +1,12 @@
 package ru.tecon.leakDetection.cdi;
 
+import jakarta.el.ValueExpression;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
 import ru.tecon.leakDetection.model.ObjProp;
 
-import javax.el.ValueExpression;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
 
 /**
  * Конвертер для выбора свойства объекта

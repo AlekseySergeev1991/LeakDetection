@@ -126,3 +126,24 @@ body .ui-datatable .ui-datatable-header {
 .constTable.ui-datatable table t {
     display: none;
 }
+
+.ui-datepicker {
+    padding: .857em !important;
+    width: 203px !important;
+}
+
+.ui-datepicker .ui-monthpicker-month {
+    margin: 0 !important;
+    padding: .5em !important;
+    color: black !important;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    border-width: 0 !important;
+    padding: 0 .5rem .5rem !important;
+    color: black !important;
+}
+
+.ui-datepicker .ui-monthpicker-month.ui-state-active {
+    color: black !important;
+}

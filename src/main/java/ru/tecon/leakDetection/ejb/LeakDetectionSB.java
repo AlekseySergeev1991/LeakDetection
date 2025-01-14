@@ -1,10 +1,11 @@
 package ru.tecon.leakDetection.ejb;
 
+import jakarta.annotation.Resource;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import ru.tecon.leakDetection.model.*;
 
-import javax.annotation.Resource;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;

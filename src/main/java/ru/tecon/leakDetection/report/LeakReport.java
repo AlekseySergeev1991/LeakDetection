@@ -147,15 +147,15 @@ public class LeakReport {
 
         SXSSFCell cell_7_8 = row_7.createCell(7);
         cell_7_8.setCellStyle(tableHeaderStyle);
-        cell_7_8.setCellValue("Gхвнагвф, м.куб/сут.");
+        cell_7_8.setCellValue("Vхвнагвф, м.куб/сут.");
 
         SXSSFCell cell_7_9 = row_7.createCell(8);
         cell_7_9.setCellStyle(tableHeaderStyle);
-        cell_7_9.setCellValue("G7ф, м.куб/сут.");
+        cell_7_9.setCellValue("V7ф, м.куб/сут.");
 
         SXSSFCell cell_7_10 = row_7.createCell(9);
         cell_7_10.setCellStyle(tableHeaderStyle);
-        cell_7_10.setCellValue("G13ф, м.куб/сут.");
+        cell_7_10.setCellValue("V13ф, м.куб/сут.");
 
         SXSSFCell cell_7_11 = row_7.createCell(10);
         cell_7_11.setCellStyle(tableHeaderStyle);
@@ -163,11 +163,11 @@ public class LeakReport {
 
         SXSSFCell cell_7_12 = row_7.createCell(11);
         cell_7_12.setCellStyle(tableHeaderStyle);
-        cell_7_12.setCellValue("ΔGф, м.куб/сут.");
+        cell_7_12.setCellValue("ΔVф, м.куб/сут.");
 
         SXSSFCell cell_7_13 = row_7.createCell(12);
         cell_7_13.setCellStyle(tableHeaderStyle);
-        cell_7_13.setCellValue("ΔGср, м.куб/сут.");
+        cell_7_13.setCellValue("ΔVср, м.куб/сут.");
 
         SXSSFCell cell_7_14 = row_7.createCell(13);
         cell_7_14.setCellStyle(tableHeaderStyle);
@@ -175,7 +175,7 @@ public class LeakReport {
 
         SXSSFCell cell_7_15 = row_7.createCell(14);
         cell_7_15.setCellStyle(tableHeaderStyle);
-        cell_7_15.setCellValue("ΔG, м.куб/сут.");
+        cell_7_15.setCellValue("ΔV, м.куб/сут.");
 
         SXSSFCell cell_7_16 = row_7.createCell(15);
         cell_7_16.setCellStyle(tableHeaderStyle);
@@ -440,31 +440,31 @@ public class LeakReport {
 
         SXSSFCell cell_7_9 = row_7.createCell(8);
         cell_7_9.setCellStyle(tableHeaderStyle);
-        cell_7_9.setCellValue("G1, м.куб/сут.");
+        cell_7_9.setCellValue("V1, м.куб/сут.");
 
         SXSSFCell cell_7_10 = row_7.createCell(9);
         cell_7_10.setCellStyle(tableHeaderStyle);
-        cell_7_10.setCellValue("G2, м.куб/сут.");
+        cell_7_10.setCellValue("V2, м.куб/сут.");
 
         SXSSFCell cell_7_11 = row_7.createCell(10);
         cell_7_11.setCellStyle(tableHeaderStyle);
-        cell_7_11.setCellValue("G3, м.куб/сут.");
+        cell_7_11.setCellValue("V3, м.куб/сут.");
 
         SXSSFCell cell_7_12 = row_7.createCell(11);
         cell_7_12.setCellStyle(tableHeaderStyle);
-        cell_7_12.setCellValue("G4, м.куб/сут.");
+        cell_7_12.setCellValue("V4, м.куб/сут.");
 
         SXSSFCell cell_7_13 = row_7.createCell(12);
         cell_7_13.setCellStyle(tableHeaderStyle);
-        cell_7_13.setCellValue("Gп, м.куб/сут.");
+        cell_7_13.setCellValue("Vп, м.куб/сут.");
 
         SXSSFCell cell_7_14 = row_7.createCell(13);
         cell_7_14.setCellStyle(tableHeaderStyle);
-        cell_7_14.setCellValue("Gср, м.куб/сут.");
+        cell_7_14.setCellValue("Vср, м.куб/сут.");
 
         SXSSFCell cell_7_15 = row_7.createCell(14);
         cell_7_15.setCellStyle(tableHeaderStyle);
-        cell_7_15.setCellValue("ΔG, м.куб/сут.");
+        cell_7_15.setCellValue("ΔV, м.куб/сут.");
 
         SXSSFCell cell_7_16 = row_7.createCell(15);
         cell_7_16.setCellStyle(tableHeaderStyle);
