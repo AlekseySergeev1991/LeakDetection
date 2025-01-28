@@ -9,25 +9,20 @@ body .ui-inputfield {
     background-color: yellow;
 }
 
-body .ui-datatable thead th {
-    padding: 0;
-    font-size: .75rem;
-}
-
 .g {
-    background-color: green;
+    background-color: #BDF8AE;
     color: black;
     border-color: black !important;
 }
 
 .y {
-    background-color: yellow;
+    background-color: #FFFDB8;
     color: black;
     border-color: black !important;
 }
 
 .r {
-    background-color: red;
+    background-color: #ffc7ce;
     color: black;
     border-color: black !important;
 }
@@ -57,4 +52,32 @@ body .ui-datatable thead th {
 
 .ui-datatable-footer {
     padding: 0 !important;
+}
+
+body .ui-datatable thead th {
+    color: #333;
+    background: #f4f4f4;
+    border: 1px solid black;
+    font-size: 0.875rem !important;
+    padding: 0;
+}
+
+.tableFont {
+    font-size: 0.875rem !important;
+}
+
+body .ui-widget {
+    color: #333;
+}
+
+body .ui-paginator .ui-paginator-current {
+    color: #333;
+}
+
+body .ui-paginator .ui-paginator-first, body .ui-paginator .ui-paginator-prev, body .ui-paginator .ui-paginator-next, body .ui-paginator .ui-paginator-last {
+    color: #333;
+}
+
+body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight, body .ui-selectmanymenu .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight {
+    color: #333;
 }

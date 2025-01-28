@@ -189,8 +189,6 @@ public class LeakDetectionMB implements Serializable {
             } else {
                 loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
             }
-            loadStruct(user, selectedStructNode.getData().getMyId());
-
         }
         PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
         PrimeFaces.current().ajax().update("leakDetectionForm:rightSide");
@@ -209,7 +207,6 @@ public class LeakDetectionMB implements Serializable {
             } else {
                 loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
             }
-            loadStruct(user, selectedStructNode.getData().getMyId());
         }
 
 
@@ -238,7 +235,6 @@ public class LeakDetectionMB implements Serializable {
             } else {
                 loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
             }
-            loadStruct(user, selectedStructNode.getData().getMyId());
         }
 
         PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");
@@ -308,8 +304,6 @@ public class LeakDetectionMB implements Serializable {
             } else {
                 loadGvsTable(selectedStructNode.getData().getMyId(), strDate, timePeriod, user);
             }
-            loadStruct(user, selectedStructNode.getData().getMyId());
-
         }
 
         PrimeFaces.current().ajax().update("leakDetectionForm:leftSide");

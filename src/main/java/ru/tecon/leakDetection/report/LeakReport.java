@@ -147,7 +147,7 @@ public class LeakReport {
 
         SXSSFCell cell_7_8 = row_7.createCell(7);
         cell_7_8.setCellStyle(tableHeaderStyle);
-        cell_7_8.setCellValue("Vхвнагвф, м.куб/сут.");
+        cell_7_8.setCellValue("Vхвнагвcф, м.куб/сут.");
 
         SXSSFCell cell_7_9 = row_7.createCell(8);
         cell_7_9.setCellStyle(tableHeaderStyle);
