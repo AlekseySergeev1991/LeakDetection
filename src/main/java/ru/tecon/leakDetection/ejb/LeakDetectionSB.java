@@ -36,7 +36,7 @@ public class LeakDetectionSB {
     private static final String GET_ARCHIVE_NAME = "select * from eff_calc.get_inf_from_excel(?)";
 
 
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(LeakDetectionSB.class.getName());
 
     @Resource(name = "jdbc/DataSource")
     private DataSource dsRw;

@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.codec.DecoderException;
 import ru.tecon.leakDetection.ejb.LeakDetectionSB;
 import ru.tecon.leakDetection.report.LeakReport;
 
@@ -92,6 +93,8 @@ public class LoadReportServlet extends HttpServlet {
             output.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (DecoderException e) {
+            throw new RuntimeException(e);
         }
     }
 

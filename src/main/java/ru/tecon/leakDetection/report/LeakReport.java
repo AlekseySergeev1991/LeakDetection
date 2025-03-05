@@ -1,11 +1,15 @@
 package ru.tecon.leakDetection.report;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import ru.tecon.leakDetection.ejb.LeakDetectionSB;
 import ru.tecon.leakDetection.model.CoolantTable;
 import ru.tecon.leakDetection.model.GvsTable;
@@ -19,7 +23,7 @@ import java.util.List;
 
 public class LeakReport {
 
-    public static SXSSFWorkbook createReport(int id, LocalDateTime timestampLDT, String interval, String user, String alg, int repType, LeakDetectionSB bean) throws IOException {
+    public static SXSSFWorkbook createReport(int id, LocalDateTime timestampLDT, String interval, String user, String alg, int repType, LeakDetectionSB bean) throws IOException, DecoderException {
         SXSSFWorkbook wb;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String timestamp = timestampLDT.format(formatter);
@@ -34,7 +38,7 @@ public class LeakReport {
         return wb;
     }
 
-    public static SXSSFWorkbook createGvsReport(int id, String timestamp, String interval, String user, int repType, LeakDetectionSB bean) {
+    public static SXSSFWorkbook createGvsReport(int id, String timestamp, String interval, String user, int repType, LeakDetectionSB bean) throws DecoderException {
         SXSSFWorkbook wb = new SXSSFWorkbook();
         SXSSFSheet sh = wb.createSheet("Отчет");
 
@@ -299,18 +303,22 @@ public class LeakReport {
 
             SXSSFCell cell_16 = row.createCell(16);
             cell_16.setCellValue(itog.getHeat_eff());
-            cell_16.setCellStyle(cellGStyleItog);
+            cell_16.setCellStyle(cellGStyle);
 
             SXSSFCell cell_17 = row.createCell(17);
             cell_17.setCellValue(itog.getWater_eff());
-            cell_17.setCellStyle(cellGStyleItog);
+            cell_17.setCellStyle(cellGStyle);
 
             SXSSFCell cell_18 = row.createCell(18);
             cell_18.setCellValue(itog.getSum_eff());
-            cell_18.setCellStyle(cellGStyleItog);
+            cell_18.setCellStyle(cellGStyle);
 
             CellRangeAddress itogMerge = new CellRangeAddress(begRow, begRow, 0, 15);
             sh.addMergedRegion(itogMerge);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderTop(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderLeft(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderRight(BorderStyle.THIN, itogMerge, sh);
         } else {
             SXSSFRow row = sh.createRow(begRow);
             SXSSFCell cell_1 = row.createCell(0);
@@ -323,7 +331,7 @@ public class LeakReport {
         return wb;
     }
 
-    public static SXSSFWorkbook createCoolantReport(int id, String timestamp, String interval, String user, int repType, LeakDetectionSB bean) {
+    public static SXSSFWorkbook createCoolantReport(int id, String timestamp, String interval, String user, int repType, LeakDetectionSB bean) throws DecoderException {
         SXSSFWorkbook wb = new SXSSFWorkbook();
         SXSSFSheet sh = wb.createSheet("Отчет");
 
@@ -579,18 +587,22 @@ public class LeakReport {
 
             SXSSFCell cell_16 = row.createCell(15);
             cell_16.setCellValue(itog.getCoolant_eff());
-            cell_16.setCellStyle(cellGStyleItog);
+            cell_16.setCellStyle(cellGStyle);
 
             SXSSFCell cell_17 = row.createCell(16);
             cell_17.setCellValue(itog.getHeat_eff());
-            cell_17.setCellStyle(cellGStyleItog);
+            cell_17.setCellStyle(cellGStyle);
 
             SXSSFCell cell_18 = row.createCell(17);
             cell_18.setCellValue(itog.getSum_eff());
-            cell_18.setCellStyle(cellGStyleItog);
+            cell_18.setCellStyle(cellGStyle);
 
             CellRangeAddress itogMerge = new CellRangeAddress(begRow, begRow, 0, 14);
             sh.addMergedRegion(itogMerge);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderTop(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderLeft(BorderStyle.THIN, itogMerge, sh);
+            RegionUtil.setBorderRight(BorderStyle.THIN, itogMerge, sh);
         } else {
             SXSSFRow row = sh.createRow(begRow);
             SXSSFCell cell_1 = row.createCell(0);
@@ -688,25 +700,34 @@ public class LeakReport {
         return style;
     }
 
-    private static CellStyle setCellRStyle(SXSSFWorkbook p_wb) {
+    private static CellStyle setCellRStyle(SXSSFWorkbook p_wb) throws DecoderException {
         CellStyle style = setCellTemplate(p_wb);
-        style.setFillForegroundColor(IndexedColors.RED.getIndex());
+        String rgbS = "ffc7ce";
+        byte [] rgbB = Hex.decodeHex(rgbS);
+        XSSFColor color = new XSSFColor(rgbB, null);
+        style.setFillForegroundColor(color);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setWrapText(false);
         return style;
     }
 
-    private static CellStyle setCellGStyle(SXSSFWorkbook p_wb) {
+    private static CellStyle setCellGStyle(SXSSFWorkbook p_wb) throws DecoderException {
         CellStyle style = setCellTemplate(p_wb);
-        style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        String rgbS = "BDF8AE";
+        byte [] rgbB = Hex.decodeHex(rgbS);
+        XSSFColor color = new XSSFColor(rgbB, null);
+        style.setFillForegroundColor(color);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setWrapText(true);
         return style;
     }
 
-    private static CellStyle setCellYStyle(SXSSFWorkbook p_wb) {
+    private static CellStyle setCellYStyle(SXSSFWorkbook p_wb) throws DecoderException {
         CellStyle style = setCellTemplate(p_wb);
-        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        String rgbS = "FFFDB8";
+        byte [] rgbB = Hex.decodeHex(rgbS);
+        XSSFColor color = new XSSFColor(rgbB, null);
+        style.setFillForegroundColor(color);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setWrapText(true);
         return style;
@@ -734,7 +755,7 @@ public class LeakReport {
         return style;
     }
 
-    private static CellStyle setCellGStyleItog(SXSSFWorkbook p_wb) {
+    private static CellStyle setCellGStyleItog(SXSSFWorkbook p_wb) throws DecoderException {
         CellStyle style = p_wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.LEFT);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -752,7 +773,10 @@ public class LeakReport {
         cellNoBoldFont.setFontHeightInPoints((short) 11);
 
         style.setFont(cellNoBoldFont);
-        style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        String rgbS = "BDF8AE";
+        byte [] rgbB = Hex.decodeHex(rgbS);
+        XSSFColor color = new XSSFColor(rgbB, null);
+        style.setFillForegroundColor(color);
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setWrapText(true);
         return style;

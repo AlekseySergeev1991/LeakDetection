@@ -413,7 +413,8 @@
                                          rowKey="#{coolantData.filial}" rendered="#{leakDetectionMB.alg eq 'gvs' and !leakDetectionMB.noObjSelected}" paginator="true" rows="300"
                                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          currentPageReportTemplate="{startRecord}-{endRecord} из {totalRecords}"
-                                         rowsPerPageTemplate="150,300,750" paginatorPosition="bottom" styleClass="tableFont">
+                                         rowsPerPageTemplate="150,300,750" paginatorPosition="bottom" styleClass="tableFont"
+                                         stickyHeader="true" stickyTopAt="#struct">
 
                                 <p:column style="text-align: center; width: 79px" headerText="Филиал" styleClass="#{gvsData.color}" >
                                     <h:outputText value="#{gvsData.filial}"/>
